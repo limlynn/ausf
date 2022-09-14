@@ -512,7 +512,7 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 			ausfCurrentContext.AuthStatus = models.AuthResult_FAILURE
 		}
 	}
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 8 where is the panic _Hyoyoung")
 	if !eapOK {
 		logger.EapAuthComfirmLog.Warnf("EAP-AKA' failure: %s", eapErrStr)
 		if sendErr := sendAuthResultToUDM(eapSessionID, models.AuthType_EAP_AKA_PRIME, false, servingNetworkName,
@@ -549,6 +549,6 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 		responseBody.EapPayload = eapFailPkt
 		responseBody.AuthResult = models.AuthResult_FAILURE
 	}
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 9 where is the panic _Hyoyoung")
 	return &responseBody, nil
 }
