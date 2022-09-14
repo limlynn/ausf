@@ -385,7 +385,7 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 	*models.ProblemDetails,
 ) {
 	var responseBody models.EapSession
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 1 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 1 where is the panic _Hyoyoung")
 
 	if !ausf_context.CheckIfSuciSupiPairExists(eapSessionID) {
 		logger.EapAuthComfirmLog.Infoln("supiSuciPair does not exist, confirmation failed")
@@ -393,7 +393,7 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 		problemDetails.Cause = "USER_NOT_FOUND"
 		return nil, &problemDetails
 	}
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 2 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 2 where is the panic _Hyoyoung")
 	currentSupi := ausf_context.GetSupiFromSuciSupiMap(eapSessionID)
 	if !ausf_context.CheckIfAusfUeContextExists(currentSupi) {
 		logger.EapAuthComfirmLog.Infoln("SUPI does not exist, confirmation failed")
@@ -401,41 +401,46 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 		problemDetails.Cause = "USER_NOT_FOUND"
 		return nil, &problemDetails
 	}
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 3 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 3 where is the panic _Hyoyoung")
 	ausfCurrentContext := ausf_context.GetAusfUeContext(currentSupi)
 	servingNetworkName := ausfCurrentContext.ServingNetworkName
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 4 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 4 where is the panic _Hyoyoung")
 	if ausfCurrentContext.AuthStatus == models.AuthResult_FAILURE {
 		eapFailPkt := ConstructEapNoTypePkt(radius.EapCodeFailure, 0)
 		responseBody.EapPayload = eapFailPkt
 		responseBody.AuthResult = models.AuthResult_FAILURE
 		return &responseBody, nil
 	}
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 5 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 5 where is the panic _Hyoyoung")
 	var eapPayload []byte
 	if eapPayloadTmp, err := base64.StdEncoding.DecodeString(updateEapSession.EapPayload); err != nil {
 		logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err)
 	} else {
 		eapPayload = eapPayloadTmp
 	}
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 6 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 6 where is the panic _Hyoyoung")
 	eapGoPkt := gopacket.NewPacket(eapPayload, layers.LayerTypeEAP, gopacket.Default)
 	eapLayer := eapGoPkt.Layer(layers.LayerTypeEAP)
 	eapContent, _ := eapLayer.(*layers.EAP)
 	eapOK := true
 	var eapErrStr string
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 7 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 7 where is the panic _Hyoyoung")
 	if eapContent.Code != layers.EAPCodeResponse {
+		logger.EapAuthComfirmLog.Infof("eapContent.Code != layers.EAPCodeResponse where is the panic _Hyoyoung")
 		eapOK = false
 		eapErrStr = "eap packet code error"
 	} else if eapContent.Type != ausf_context.EAP_AKA_PRIME_TYPENUM {
+		logger.EapAuthComfirmLog.Infof("eapContent.Type != ausf_context.EAP_AKA_PRIME_TYPENUM where is the panic _Hyoyoung")
 		eapOK = false
 		eapErrStr = "eap packet type error"
 	} else if decodeEapAkaPrimePkt, err := decodeEapAkaPrime(eapContent.Contents); err != nil {
+		logger.EapAuthComfirmLog.Infof("decodeEapAkaPrimePkt, err := decodeEapAkaPrime(eapContent.Contents); err != nil where is the panic _Hyoyoung")
 		logger.EapAuthComfirmLog.Warnf("EAP-AKA' decode failed: %+v", err)
 		eapOK = false
 		eapErrStr = "eap packet error"
 	} else {
+		logger.EapAuthComfirmLog.Infof("Last where is the panic _Hyoyoung")
+		
 		switch decodeEapAkaPrimePkt.Subtype {
 		case ausf_context.AKA_CHALLENGE_SUBTYPE:
 			K_autStr := ausfCurrentContext.K_aut
@@ -512,6 +517,8 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 			ausfCurrentContext.AuthStatus = models.AuthResult_FAILURE
 		}
 	}
+
+
 	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 8 where is the panic _Hyoyoung")
 	if !eapOK {
 		logger.EapAuthComfirmLog.Warnf("EAP-AKA' failure: %s", eapErrStr)
