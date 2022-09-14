@@ -418,7 +418,8 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 	if eapPayloadTmp, err := base64.StdEncoding.DecodeString(updateEapSession.EapPayload); err != nil {
 		logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err)
 	} else {
-		eapPayload = eapPayloadTmp
+		// eapPayload = eapPayloadTmp
+		eapPayload = updateEapSession.EapPayload // Hyoyoung
 	}
 	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 6 where is the panic _Hyoyoung")
 	logger.EapAuthComfirmLog.Warnf("EAP Payload eapContent: %+v", eapPayload)
