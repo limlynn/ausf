@@ -425,6 +425,7 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 	eapOK := true
 	var eapErrStr string
 	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 7 where is the panic _Hyoyoung")
+	logger.EapAuthComfirmLog.Warnf("EAP Payload eapContent: %s", eapContent)
 	if eapContent.Code != layers.EAPCodeResponse {
 		logger.EapAuthComfirmLog.Infof("eapContent.Code != layers.EAPCodeResponse where is the panic _Hyoyoung")
 		eapOK = false
