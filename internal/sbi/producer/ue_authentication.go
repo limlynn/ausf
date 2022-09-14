@@ -23,13 +23,13 @@ import (
 )
 
 func HandleEapAuthComfirmRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequest")
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequest _Hyoyoung_10")
 
 	updateEapSession := request.Body.(models.EapSession)
 	eapSessionID := request.Params["authCtxId"]
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequest where is the panic _Hyoyoung_11")
 	response, problemDetails := EapAuthComfirmRequestProcedure(updateEapSession, eapSessionID)
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequest where is the panic _Hyoyoung_12")
 	if response != nil {
 		return httpwrapper.NewResponse(http.StatusOK, nil, response)
 	} else if problemDetails != nil {
@@ -61,7 +61,7 @@ func HandleAuth5gAkaComfirmRequest(request *httpwrapper.Request) *httpwrapper.Re
 }
 
 func HandleUeAuthPostRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	logger.UeAuthPostLog.Infof("HandleUeAuthPostRequest")
+	logger.UeAuthPostLog.Infof("HandleUeAuthPostRequest_Hyoyoung_1")
 	updateAuthenticationInfo := request.Body.(models.AuthenticationInfo)
 
 	response, locationURI, problemDetails := UeAuthPostRequestProcedure(updateAuthenticationInfo)
@@ -99,7 +99,7 @@ func UeAuthPostRequestProcedure(updateAuthenticationInfo models.AuthenticationIn
 		logger.UeAuthPostLog.Infoln("403 forbidden: serving network NOT AUTHORIZED")
 		return nil, "", &problemDetails
 	}
-	logger.UeAuthPostLog.Infoln("Serving network authorized")
+	logger.UeAuthPostLog.Infoln("Serving network authorized_Hyoyoung_2")
 
 	responseBody.ServingNetworkName = snName
 	authInfoReq.ServingNetworkName = snName
@@ -148,7 +148,7 @@ func UeAuthPostRequestProcedure(updateAuthenticationInfo models.AuthenticationIn
 	ausfUeContext.UdmUeauUrl = udmUrl
 	ausf_context.AddAusfUeContextToPool(ausfUeContext)
 
-	logger.UeAuthPostLog.Infof("Add SuciSupiPair (%s, %s) to map.\n", supiOrSuci, ueid)
+	logger.UeAuthPostLog.Infof("Add SuciSupiPair (%s, %s) to map._Hyoyoung_4)\n", supiOrSuci, ueid)
 	ausf_context.AddSuciSupiPairToMap(supiOrSuci, ueid)
 
 	locationURI := self.Url + "/nausf-auth/v1/ue-authentications/" + supiOrSuci
@@ -214,21 +214,25 @@ func UeAuthPostRequestProcedure(updateAuthenticationInfo models.AuthenticationIn
 		linksValue := models.LinksValueSchema{Href: putLink}
 		responseBody.Links = make(map[string]models.LinksValueSchema)
 		responseBody.Links["5g-aka"] = linksValue
-	} else if authInfoResult.AuthType == models.AuthType_EAP_AKA_PRIME {
-		logger.UeAuthPostLog.Infoln("Use EAP-AKA' auth method")
+	} else if authInfoResult.AuthType == models.AuthType_EAP_AKA_PRIME { // use EAP-AKA'
+		logger.UeAuthPostLog.Infoln("Use EAP-AKA' auth method_Hyoyoung_5")
 		putLink += "/eap-session"
 
 		var identity string
 		// TODO support more SUPI type
 		if ueid[:4] == "imsi" {
+			logger.UeAuthPostLog.Infoln("ueid has imsi _Hyoyoung_6")
 			if !self.EapAkaSupiImsiPrefix {
 				// 33.501 v15.9.0 or later
+				logger.UeAuthPostLog.Infoln("Not self.EapAkaSupiImsiPrefix_Hyoyoung_7")
 				identity = ueid[5:]
 			} else {
 				// 33.501 v15.8.0 or earlier
+				logger.UeAuthPostLog.Infoln("Yes self.EapAkaSupiImsiPrefix_Hyoyoung_7")
 				identity = ueid
 			}
 		}
+		logger.UeAuthPostLog.Infoln("identity: %s _Hyoyoung_8", ueid)
 		ikPrime := authInfoResult.AuthenticationVector.IkPrime
 		ckPrime := authInfoResult.AuthenticationVector.CkPrime
 		RAND := authInfoResult.AuthenticationVector.Rand
@@ -239,7 +243,7 @@ func UeAuthPostRequestProcedure(updateAuthenticationInfo models.AuthenticationIn
 		ausfUeContext.Rand = authInfoResult.AuthenticationVector.Rand
 
 		_, K_aut, _, _, EMSK := eapAkaPrimePrf(ikPrime, ckPrime, identity)
-		logger.EapAuthComfirmLog.Tracef("K_aut: %x", K_aut)
+		logger.EapAuthComfirmLog.Tracef("K_aut: %x _Hyoyoung_9", K_aut)
 		ausfUeContext.K_aut = hex.EncodeToString(K_aut)
 		Kausf := EMSK[0:32]
 		ausfUeContext.Kausf = hex.EncodeToString(Kausf)
@@ -376,11 +380,12 @@ func Auth5gAkaComfirmRequestProcedure(updateConfirmationData models.Confirmation
 	return &responseBody, nil
 }
 
-// return response, problemDetails
+// return response, problemDetails // Hyoyoung need to start hear
 func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessionID string) (*models.EapSession,
 	*models.ProblemDetails,
 ) {
 	var responseBody models.EapSession
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 1 where is the panic _Hyoyoung")
 
 	if !ausf_context.CheckIfSuciSupiPairExists(eapSessionID) {
 		logger.EapAuthComfirmLog.Infoln("supiSuciPair does not exist, confirmation failed")
@@ -388,7 +393,7 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 		problemDetails.Cause = "USER_NOT_FOUND"
 		return nil, &problemDetails
 	}
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 2 where is the panic _Hyoyoung")
 	currentSupi := ausf_context.GetSupiFromSuciSupiMap(eapSessionID)
 	if !ausf_context.CheckIfAusfUeContextExists(currentSupi) {
 		logger.EapAuthComfirmLog.Infoln("SUPI does not exist, confirmation failed")
@@ -396,30 +401,30 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 		problemDetails.Cause = "USER_NOT_FOUND"
 		return nil, &problemDetails
 	}
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 3 where is the panic _Hyoyoung")
 	ausfCurrentContext := ausf_context.GetAusfUeContext(currentSupi)
 	servingNetworkName := ausfCurrentContext.ServingNetworkName
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 4 where is the panic _Hyoyoung")
 	if ausfCurrentContext.AuthStatus == models.AuthResult_FAILURE {
 		eapFailPkt := ConstructEapNoTypePkt(radius.EapCodeFailure, 0)
 		responseBody.EapPayload = eapFailPkt
 		responseBody.AuthResult = models.AuthResult_FAILURE
 		return &responseBody, nil
 	}
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 5 where is the panic _Hyoyoung")
 	var eapPayload []byte
 	if eapPayloadTmp, err := base64.StdEncoding.DecodeString(updateEapSession.EapPayload); err != nil {
 		logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err)
 	} else {
 		eapPayload = eapPayloadTmp
 	}
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 6 where is the panic _Hyoyoung")
 	eapGoPkt := gopacket.NewPacket(eapPayload, layers.LayerTypeEAP, gopacket.Default)
 	eapLayer := eapGoPkt.Layer(layers.LayerTypeEAP)
 	eapContent, _ := eapLayer.(*layers.EAP)
 	eapOK := true
 	var eapErrStr string
-
+	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 7 where is the panic _Hyoyoung")
 	if eapContent.Code != layers.EAPCodeResponse {
 		eapOK = false
 		eapErrStr = "eap packet code error"

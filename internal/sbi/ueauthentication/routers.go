@@ -77,7 +77,7 @@ var routes = Routes{
 	{
 		"HTTPEapAuthMethod",
 		strings.ToUpper("Post"),
-		"/ue-authentications/:authCtxId/eap-session",
+		"/ue-authentications/:authCtxId/eap-session", // Hyoyoung needs to check
 		HTTPEapAuthMethod,
 	},
 

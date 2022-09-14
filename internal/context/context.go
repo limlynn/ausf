@@ -101,6 +101,7 @@ func Init() {
 }
 
 func NewAusfUeContext(identifier string) (ausfUeContext *AusfUeContext) {
+	logger.ContextLog.Warnf("NewAusfUeContext_Hyoyoung_3") // Hyoyoung checking IMSI
 	ausfUeContext = new(AusfUeContext)
 	ausfUeContext.Supi = identifier // supi
 	return ausfUeContext

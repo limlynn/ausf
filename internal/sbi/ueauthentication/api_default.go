@@ -22,7 +22,7 @@ import (
 )
 
 // HTTPEapAuthMethod -
-func HTTPEapAuthMethod(ctx *gin.Context) {
+func HTTPEapAuthMethod(ctx *gin.Context) {  // Hyoyoung
 	var eapSessionReq models.EapSession
 
 	requestBody, err := ctx.GetRawData()
