@@ -415,16 +415,15 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 	var eapPayload []byte
 	logger.EapAuthComfirmLog.Warnf("updateEapSession.EapPayload: %+v", updateEapSession.EapPayload)
 	
-	// if eapPayloadTmp, err := base64.StdEncoding.DecodeString(updateEapSession.EapPayload); err != nil {
-	// 	logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err)
-	// } else {
-	// 	eapPayload = eapPayloadTmp
-	// 	logger.EapAuthComfirmLog.Warnf("EAP Payload eapPayloadTmp: %+v", eapPayload)
-	// }
+	if eapPayloadTmp, err := base64.StdEncoding.DecodeString(updateEapSession.EapPayload); err != nil {
+		logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err)
+	} else {
+		eapPayload = eapPayloadTmp
+		logger.EapAuthComfirmLog.Warnf("EAP Payload eapPayloadTmp: %+v", eapPayload)
+	}
 	// eap_message = "\x4f\x3a\x02\x54\x00\x38\x01\x36\x30\x30\x31\x30\x31\x39\x39\x39\x30\x30\x30\x30\x30\x30\x31\x40\x77\x6c\x61\x6e\x2e\x6d\x6e\x63\x30\x30\x31\x2e\x6d\x63\x63\x30\x30\x31\x2e\x33\x67\x70\x70\x6e\x65\x74\x77\x6f\x72\x6b\x2e\x6f\x72\x67"
                 
-	eapPayload = updateEapSession.EapPayload
-	// Hyoyoung
+	// eapPayload = updateEapSession.EapPayload // Hyoyoung, Error
 	// logger.EapAuthComfirmLog.Warnf("EAP Payload eapPayload without Decode: %+v", eapPayload)
 
 	logger.EapAuthComfirmLog.Infof("EapAuthComfirmRequestProcedure 6 where is the panic _Hyoyoung")
