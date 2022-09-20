@@ -186,7 +186,9 @@ func decodeEapAkaPrime(eapPkt []byte) (*ausf_context.EapAkaPrimePkt, error) {
 	data := eapPkt[5:]
 	decodePkt.Subtype = data[0]
 	dataLen := len(data)
-
+	logger.EapAuthComfirmLog.Warnf(">>> Hyoyoung decodeEapAkaPrime debugging message") // Hyoyoung
+	logger.EapAuthComfirmLog.Warnf(attributes) // Hyoyoung
+	logger.EapAuthComfirmLog.Warnf(data) // Hyoyoung
 	// decode attributes
 	for i := 3; i < dataLen; i += attrLen {
 		attrType := data[i]
