@@ -416,11 +416,14 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 	logger.EapAuthComfirmLog.Warnf("updateEapSession.EapPayload: %+v", updateEapSession.EapPayload)
 	
 	if eapPayloadTmp, err := base64.StdEncoding.DecodeString(updateEapSession.EapPayload); err != nil {
-		logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err)
+		logger.EapAuthComfirmLog.Warnf("EAP Payload decode failed: %+v", err) // Hyoyoung : issue!!
 	} else {
 		eapPayload = eapPayloadTmp
 		logger.EapAuthComfirmLog.Warnf("EAP Payload eapPayloadTmp: %+v", eapPayload)
 	}
+
+	eapPayload = b"\x01\x12\x011\xe8j{'\x80\x9a\x87\xaa\xef\xe9|pq\x8c\xcd\xca\x0156001019990000001@wlan.mnc001.mcc001.3gppnetwork.org\x04\x06\nF#@ \x02\x1e\x1b00-C0-CA-97-E8-9F:test123=\x06\x00\x00\x00\x13\x06\x06\x00\x00\x00\x02\x05\x06\x00\x00\x00\x01\x1f\x13C2-1B-44-00-C3-6DM\x18CONNECT 54Mbps 802.11g,\x1252DC94971F5852A12\x1249327FA709E9D095\xba\x06\x00\x0f\xac\x04\xbb\x06\x00\x0f\xac\x02\xbc\x06\x00\x0f\xac\x01\x0c\x06\x00\x00\x05xO:\x02Q\x008\x016001019990000001@wlan.mnc001.mcc001.3gppnetwork.orgP\x12\xc0\x10$\ni\n\x1bJhZ\xd2T@v\xa1\xe6"
+
 	// eap_message = "\x4f\x3a\x02\x54\x00\x38\x01\x36\x30\x30\x31\x30\x31\x39\x39\x39\x30\x30\x30\x30\x30\x30\x31\x40\x77\x6c\x61\x6e\x2e\x6d\x6e\x63\x30\x30\x31\x2e\x6d\x63\x63\x30\x30\x31\x2e\x33\x67\x70\x70\x6e\x65\x74\x77\x6f\x72\x6b\x2e\x6f\x72\x67"
                 
 	// eapPayload = updateEapSession.EapPayload // Hyoyoung, Error
