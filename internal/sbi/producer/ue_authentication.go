@@ -573,7 +573,7 @@ func EapAuthComfirmRequestProcedure(updateEapSession models.EapSession, eapSessi
 		responseBody.AuthResult = models.AuthResult_FAILURE
 	}
 	logger.Auth5gAkaComfirmLog.Infof("EapAuthComfirmRequestProcedure 9 where is the panic _Hyoyoung")
-	logger.EapAuthComfirmLog.Warnf("responseBody.EapPayload _Hyoyoung_next_step: %s", eapresponseBody.EapPayloadGoPkt)
+	logger.EapAuthComfirmLog.Warnf("responseBody.EapPayload _Hyoyoung_next_step: %s", responseBody.EapPayload)
 	
 	return &responseBody, nil
 }
