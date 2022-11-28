@@ -92,7 +92,7 @@ const (
 var ausfContext AUSFContext
 
 func Init() {
-	if snRegex, err := regexp.Compile("5G:mnc[0-9]{3}[.]mcc[0-9]{3}[.]3gppnetwork[.]org"); err != nil {
+	if snRegex, err := regexp.Compile("wlan.mnc[0-9]{3}[.]mcc[0-9]{3}[.]3gppnetwork[.]org"); err != nil {
 		logger.ContextLog.Warnf("SN compile error: %+v", err)
 	} else {
 		ausfContext.snRegex = snRegex
@@ -120,8 +120,7 @@ func GetAusfUeContext(ref string) *AusfUeContext {
 	context, _ := ausfContext.UePool.Load(ref)
 	ausfUeContext := context.(*AusfUeContext)
 	return ausfUeContext
-}
-
+.
 func AddSuciSupiPairToMap(supiOrSuci string, supi string) {
 	newPair := new(SuciSupiMap)
 	newPair.SupiOrSuci = supiOrSuci
