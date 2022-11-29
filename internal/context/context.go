@@ -120,7 +120,7 @@ func GetAusfUeContext(ref string) *AusfUeContext {
 	context, _ := ausfContext.UePool.Load(ref)
 	ausfUeContext := context.(*AusfUeContext)
 	return ausfUeContext
-.
+
 func AddSuciSupiPairToMap(supiOrSuci string, supi string) {
 	newPair := new(SuciSupiMap)
 	newPair.SupiOrSuci = supiOrSuci
